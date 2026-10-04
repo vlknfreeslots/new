@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Загрузка игры...</title>
+    <title>VLKN: Удачной игры!</title>
     <style>
         body, html {
             margin: 0;
@@ -13,66 +13,134 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #111111; /* Темный фон в стиле слотов */
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle, #250b31 0%, #0d0413 100%); /* Глубокий темно-фиолетовый градиент */
+            font-family: 'Arial Black', Gadget, sans-serif;
             overflow: hidden;
             color: #ffffff;
         }
 
+        /* Эффект падающих символов на фоне */
+        .background-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.15;
+            font-size: 24px;
+        }
+
+        .particle {
+            position: absolute;
+            animation: fall 2s linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Контейнер заставки */
         .splash-container {
             text-align: center;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
             opacity: 1;
+            z-index: 10;
         }
 
-        /* Индикатор загрузки в неоновом стиле */
-        .loader {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            width: 60px;
-            height: 60px;
+        /* Яркий игровой логотип */
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #fff;
+            /* Неоновое свечение */
+            text-shadow: 
+                0 0 10px #ff007f,
+                0 0 20px #ff007f,
+                0 0 40px #ff007f,
+                0 0 80px #ff007f;
+            animation: pulse 1.5s ease-in-out infinite alternate;
+            margin-bottom: 5px;
+        }
+
+        .sub-logo {
+            font-size: 20px;
+            color: #ffd700; /* Золотой цвет */
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+            margin-bottom: 40px;
+        }
+
+        /* Стильный круговой неоновый лоадер */
+        .casino-loader {
+            width: 70px;
+            height: 70px;
+            border: 4px dashed #ffd700;
             border-radius: 50%;
-            border-left-color: #ff007f; /* Яркий розовый/неоновый акцент */
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px auto;
-            box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+            border-left-color: #ff007f;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.4), inset 0 0 20px rgba(255, 215, 0, 0.2);
         }
 
+        /* Анимации */
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        h1 {
-            font-size: 26px;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        @keyframes pulse {
+            0% { transform: scale(0.98); text-shadow: 0 0 10px #ff007f, 0 0 20px #ff007f, 0 0 30px #ff007f; }
+            100% { transform: scale(1.02); text-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f, 0 0 50px #ff007f, 0 0 70px #ff007f; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Фоновые элементы удачи -->
+    <div class="background-particles" id="particles"></div>
+
     <div class="splash-container" id="splash">
-        <div class="loader"></div>
-        <h1>VLKN FREE SLOTS</h1>
+        <div class="logo">VLKN</div>
+        <div class="sub-logo">Free Slots</div>
+        <div class="casino-loader"></div>
     </div>
 
     <script>
-        // Ваша ссылка для автоматического перехода
-        const targetUrl = "https://vlknfreeslots.github.io/new2/"; 
+        // Генератор случайных фоновых символов (слотов)
+        const particlesContainer = document.getElementById('particles');
+        const symbols = ['💎', '⭐', '7️⃣', '🍋', '🍒', '💰'];
         
-        // Время показа заставки (2000 миллисекунд = 2 секунды)
+        for (let i = 0; i < 25; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.top = Math.random() * -20 + 'vh';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.fontSize = Math.random() * (30 - 18) + 18 + 'px';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Логика перенаправления
+        const targetUrl = "https://github.io"; 
         const displayTime = 2000; 
 
         setTimeout(() => {
             const splash = document.getElementById('splash');
-            splash.style.opacity = '0'; // Запуск анимации исчезновения
+            // Эффект красивого растворения с легким уменьшением перед уходом
+            splash.style.opacity = '0';
+            splash.style.transform = 'scale(0.9)';
             
             setTimeout(() => {
                 window.location.href = targetUrl;
-            }, 500); 
+            }, 400); 
 
-        }, displayTime - 500); // Плавный переход ровно через 2 секунды
+        }, displayTime - 400);
     </script>
 
 </body>
