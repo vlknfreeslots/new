@@ -1,31 +1,79 @@
-<!-- 1. Шаблон нашего кастомного веб-компонента -->
-<template id="card-template">
-  <style>
-    .card { border: 2px solid #333; padding: 20px; border-radius: 8px; width: 250px; }
-    .title { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; color: #007bff; }
-  </style>
-  <div class="card">
-    <!-- Именованный слот для заголовка -->
-    <div class="title"><slot name="title">Дефолтный заголовок</slot></div>
-    <!-- Неименованный (дефолтный) слот для основного контента -->
-    <div class="content"><slot>Здесь будет текст...</slot></div>
-  </div>
-</template>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Загрузка игры...</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #111111; /* Темный фон в стиле слотов */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            color: #ffffff;
+        }
 
-<!-- 2. Использование компонента на странице -->
-<my-card>
-  <span slot="title">Моя карточка</span>
-  Это основной текст, который автоматически попадёт в дефолтный слот.
-</my-card>
+        .splash-container {
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 1;
+        }
 
-<!-- 3. Скрипт для регистрации кастомного элемента -->
-<script>
-  customElements.define('my-card', class extends HTMLElement {
-    constructor() {
-      super();
-      const template = document.getElementById('card-template').content;
-      // Создаем Shadow DOM и прикрепляем шаблон
-      this.attachShadow({ mode: 'open' }).appendChild(template.cloneNode(true));
-    }
-  });
-</script>
+        /* Индикатор загрузки в неоновом стиле */
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border-left-color: #ff007f; /* Яркий розовый/неоновый акцент */
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="splash-container" id="splash">
+        <div class="loader"></div>
+        <h1>VLKN FREE SLOTS</h1>
+    </div>
+
+    <script>
+        // Ваша ссылка для автоматического перехода
+        const targetUrl = "https://vlknfreeslots.github.io/new2/"; 
+        
+        // Время показа заставки (2000 миллисекунд = 2 секунды)
+        const displayTime = 2000; 
+
+        setTimeout(() => {
+            const splash = document.getElementById('splash');
+            splash.style.opacity = '0'; // Запуск анимации исчезновения
+            
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 500); 
+
+        }, displayTime - 500); // Плавный переход ровно через 2 секунды
+    </script>
+
+</body>
+</html>
