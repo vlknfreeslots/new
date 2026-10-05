@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Студенческий Помощник</title>
+    <title>Студенческий Помощник Pro</title>
     <style>
         :root {
             --primary-color: #6200ee;
@@ -12,7 +12,21 @@
             --surface: #ffffff;
             --text: #333333;
             --text-light: #666666;
-            --ai-color: #8a2be2;
+            --border: #dddddd;
+            --calc-btn: #e5e5ea;
+            --calc-btn-text: #000000;
+        }
+
+        /* Стили для Темной темы */
+        [data-theme="dark"] {
+            --background: #121212;
+            --surface: #1e1e1e;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border: #333333;
+            --calc-btn: #333333;
+            --calc-btn-text: #ffffff;
+            --primary-color: #bb86fc;
         }
 
         body {
@@ -24,6 +38,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container {
@@ -32,12 +47,64 @@
         }
 
         header {
-            text-align: center;
-            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%;
         }
 
-        h1 { margin: 0; color: var(--primary-color); }
-        p { color: var(--text-light); margin: 5px 0 0 0; }
+        h1 { margin: 0; color: var(--primary-color); font-size: 24px; }
+        
+        /* Кнопка смены темы */
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .theme-toggle:hover {
+            background: var(--primary-color);
+            color: var(--surface);
+        }
+
+        /* Стили вкладок (Табов) */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 600;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: var(--surface);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         .card {
             background: var(--surface);
@@ -45,114 +112,105 @@
             padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin-bottom: 25px;
+            border: 1px solid var(--border);
         }
 
-        h2 { margin-top: 0; color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 8px; }
+        h2 { margin-top: 0; color: var(--primary-color); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
 
-        /* Стили расписания */
+        input, select, button, textarea {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: var(--surface);
+            color: var(--text);
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: var(--surface);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { opacity: 0.9; }
+
+        /* Вкладка 1: Расписание */
         .schedule-input-group {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr auto;
             gap: 10px;
             margin-bottom: 15px;
         }
-
-        input, select, button {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        button:hover { background-color: #4b00b8; }
-
-        .schedule-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
+        .schedule-list { list-style: none; padding: 0; margin: 0; }
         .schedule-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border);
         }
+        .delete-btn { background-color: #ff3b30; color: white; padding: 6px 12px; }
 
-        .schedule-item:last-child { border-bottom: none; }
-        .delete-btn { background-color: #ff3b30; padding: 5px 10px; }
-        .delete-btn:hover { background-color: #d32f2f; }
-
-        /* Стили калькулятора */
+        /* Вкладка 2: Калькулятор */
         .calc-screen {
             width: 100%;
-            height: 50px;
-            background: #f0f0f2;
-            border: none;
-            border-radius: 8px;
+            height: 60px;
+            background: var(--background);
             text-align: right;
-            padding: 10px;
-            font-size: 20px;
+            font-size: 24px;
             margin-bottom: 15px;
-            box-sizing: border-box;
         }
-
         .calc-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
         }
-
         .calc-grid button {
-            height: 50px;
+            height: 55px;
             font-size: 18px;
-            background-color: #e5e5ea;
-            color: black;
+            background-color: var(--calc-btn);
+            color: var(--calc-btn-text);
+        }
+        .calc-grid button.operator { background-color: #ff9500; color: white; }
+        .calc-grid button.equal { background-color: var(--primary-color); color: var(--surface); }
+
+        /* Вкладка 3: Заметки */
+        .notes-textarea {
+            width: 100%;
+            height: 150px;
+            resize: vertical;
+            margin-bottom: 10px;
+            font-family: inherit;
         }
 
-        .calc-grid button.operator { background-color: #ff9500; color: white; }
-        .calc-grid button.equal { background-color: var(--primary-color); color: white; }
-        .calc-grid button:hover { opacity: 0.8; }
-
-        /* Стили промо-блока Examka AI */
+        /* Промо-блок Examka AI */
         .examka-promo {
             background: linear-gradient(135deg, #8a2be2, #4a00e0);
             color: white;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
-
         .examka-promo h2 { color: white; border: none; }
+        .examka-promo p { color: #e0d0ff; }
         .examka-btn {
             display: inline-block;
             background-color: #03dac6;
-            color: #333;
+            color: #121212;
             text-decoration: none;
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 25px;
             font-weight: bold;
             margin-top: 15px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             transition: transform 0.2s;
         }
-
-        .examka-btn:hover {
-            transform: scale(1.05);
-            background-color: #02bfae;
-        }
+        .examka-btn:hover { transform: scale(1.05); }
 
         @media (max-width: 600px) {
             .schedule-input-group { grid-template-columns: 1fr; }
+            .tabs-nav { flex-wrap: wrap; }
+            .tab-btn { flex: 1; text-align: center; padding: 8px 10px; font-size: 14px; }
         }
     </style>
 </head>
@@ -160,145 +218,77 @@
 
 <div class="container">
     <header>
-        <h1>🎓 Мой Помощник</h1>
-        <p>Расписание, расчеты и ИИ под рукой</p>
+        <div>
+            <h1>🎓 Студенческий Помощник</h1>
+        </div>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Темная тема</button>
     </header>
 
-    <!-- БЛОК 1: РАСПИСАНИЕ -->
-    <div class="card">
-        <h2>📅 Расписание занятий</h2>
-        <div class="schedule-input-group">
-            <input type="text" id="subject" placeholder="Название предмета">
-            <input type="time" id="time">
-            <input type="text" id="room" placeholder="Аудитория">
-            <button onclick="addLesson()">Добавить</button>
-        </div>
-        <ul class="schedule-list" id="scheduleList">
-            <!-- Сюда добавляются уроки -->
-        </ul>
+    <!-- Навигация по вкладкам -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-schedule')">📅 Расписание</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-calc')">🧮 Калькулятор</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-notes')">📝 Шпаргалки</button>
     </div>
 
-    <!-- БЛОК 2: КАЛЬКУЛЯТОР -->
-    <div class="card">
-        <h2>🧮 Калькулятор</h2>
-        <input type="text" class="calc-screen" id="calcScreen" readonly>
-        <div class="calc-grid">
-            <button onclick="clearCalc()">C</button>
-            <button onclick="pressCalc('(')">(</button>
-            <button onclick="pressCalc(')')">)</button>
-            <button class="operator" onclick="pressCalc('/')">/</button>
-            
-            <button onclick="pressCalc('7')">7</button>
-            <button onclick="pressCalc('8')">8</button>
-            <button onclick="pressCalc('9')">9</button>
-            <button class="operator" onclick="pressCalc('*')">*</button>
-            
-            <button onclick="pressCalc('4')">4</button>
-            <button onclick="pressCalc('5')">5</button>
-            <button onclick="pressCalc('6')">6</button>
-            <button class="operator" onclick="pressCalc('-')">-</button>
-            
-            <button onclick="pressCalc('1')">1</button>
-            <button onclick="pressCalc('2')">2</button>
-            <button onclick="pressCalc('3')">3</button>
-            <button class="operator" onclick="pressCalc('+')">+</button>
-            
-            <button onclick="pressCalc('0')">0</button>
-            <button onclick="pressCalc('.')">.</button>
-            <button class="equal" onclick="calculateResult()" grid-column="span 2">=</button>
+    <!-- ВКЛАДКА 1: РАСПИСАНИЕ -->
+    <div id="tab-schedule" class="tab-content active">
+        <div class="card">
+            <h2>📅 Расписание занятий</h2>
+            <div class="schedule-input-group">
+                <input type="text" id="subject" placeholder="Предмет">
+                <input type="time" id="time">
+                <input type="text" id="room" placeholder="Ауд.">
+                <button onclick="addLesson()">Добавить</button>
+            </div>
+            <ul class="schedule-list" id="scheduleList"></ul>
         </div>
     </div>
 
-    <!-- БЛОК 3: ПАРТНЕРСКИЙ БАННЕР EXAMKA AI -->
+    <!-- ВКЛАДКА 2: КАЛЬКУЛЯТОР -->
+    <div id="tab-calc" class="tab-content">
+        <div class="card">
+            <h2>🧮 Калькулятор</h2>
+            <input type="text" class="calc-screen" id="calcScreen" readonly>
+            <div class="calc-grid">
+                <button onclick="clearCalc()">C</button>
+                <button onclick="pressCalc('(')">(</button>
+                <button onclick="pressCalc(')')">)</button>
+                <button class="operator" onclick="pressCalc('/')">/</button>
+                
+                <button onclick="pressCalc('7')">7</button>
+                <button onclick="pressCalc('8')">8</button>
+                <button onclick="pressCalc('9')">9</button>
+                <button class="operator" onclick="pressCalc('*')">*</button>
+                
+                <button onclick="pressCalc('4')">4</button>
+                <button onclick="pressCalc('5')">5</button>
+                <button onclick="pressCalc('6')">6</button>
+                <button class="operator" onclick="pressCalc('-')">-</button>
+                
+                <button onclick="pressCalc('1')">1</button>
+                <button onclick="pressCalc('2')">2</button>
+                <button onclick="pressCalc('3')">3</button>
+                <button class="operator" onclick="pressCalc('+')">+</button>
+                
+                <button onclick="pressCalc('0')">0</button>
+                <button onclick="pressCalc('.')">.</button>
+                <button class="equal" onclick="calculateResult()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВКЛАДКА 3: ШПАРГАЛКИ И ЗАМЕТКИ -->
+    <div id="tab-notes" class="tab-content">
+        <div class="card">
+            <h2>📝 Шпаргалки и заметки</h2>
+            <p style="font-size: 13px; margin-bottom: 10px;">Текст сохраняется автоматически при вводе.</p>
+            <textarea class="notes-textarea" id="notesArea" oninput="saveNotes()" placeholder="Вставьте сюда формулы, темы докладов или важные заметки к сессии..."></textarea>
+        </div>
+    </div>
+
+    <!-- ПОСТОЯННЫЙ ПАРТНЕРСКИЙ БАННЕР EXAMKA AI -->
     <div class="card examka-promo">
         <h2>✨ Сложная задача или реферат?</h2>
         <p>Нейросеть Examka AI напишет курсовую, решит высшую математику, сделает чертеж или презентацию за пару минут по ГОСТу!</p>
-        <!-- Вставьте вашу реферальную ссылку из кабинета https://examka.ai -->
-        <a href="https://examka.ai" target="_blank" class="examka-btn">Решить через Examka ИИ →</a>
-    </div>
-</div>
-
-<script>
-    // --- ЛОГИКА РАСПИСАНИЯ ---
-    function loadSchedule() {
-        const localData = localStorage.getItem('student_schedule');
-        const lessons = localData ? JSON.parse(localData) : [];
-        const list = document.getElementById('scheduleList');
-        list.innerHTML = '';
-        
-        lessons.forEach((lesson, index) => {
-            const li = document.createElement('li');
-            li.className = 'schedule-item';
-            li.innerHTML = `
-                <div>
-                    <strong>${lesson.time}</strong> — ${lesson.subject} 
-                    <span style="color: var(--text-light)">[Ауд. ${lesson.room}]</span>
-                </div>
-                <button class="delete-btn" onclick="deleteLesson(${index})">Удалить</button>
-            `;
-            list.appendChild(li);
-        });
-    }
-
-    function addLesson() {
-        const subject = document.getElementById('subject').value;
-        const time = document.getElementById('time').value;
-        const room = document.getElementById('room').value;
-
-        if (!subject || !time || !room) {
-            alert('Пожалуйста, заполните все поля расписания.');
-            return;
-        }
-
-        const localData = localStorage.getItem('student_schedule');
-        const lessons = localData ? JSON.parse(localData) : [];
-        lessons.push({ subject, time, room });
-        
-        // Сортировка по времени
-        lessons.sort((a, b) => a.time.localeCompare(b.time));
-        
-        localStorage.setItem('student_schedule', JSON.stringify(lessons));
-        loadSchedule();
-
-        // Очистка полей
-        document.getElementById('subject').value = '';
-        document.getElementById('time').value = '';
-        document.getElementById('room').value = '';
-    }
-
-    function deleteLesson(index) {
-        const localData = localStorage.getItem('student_schedule');
-        let lessons = localData ? JSON.parse(localData) : [];
-        lessons.splice(index, 1);
-        localStorage.setItem('student_schedule', JSON.stringify(lessons));
-        loadSchedule();
-    }
-
-    // --- ЛОГИКА КАЛЬКУЛЯТОРА ---
-    const screen = document.getElementById('calcScreen');
-
-    function pressCalc(val) {
-        screen.value += val;
-    }
-
-    function clearCalc() {
-        screen.value = '';
-    }
-
-    function calculateResult() {
-        try {
-            // Безопасное вычисление простой строки
-            if(screen.value) {
-                screen.value = Function('"use strict";return (' + screen.value + ')')();
-            }
-        } catch (error) {
-            screen.value = 'Ошибка';
-        }
-    }
-
-    // Инициализация при загрузке страницы
-    window.onload = loadSchedule;
-</script>
-
-</body>
-</html>
+        <!-- Замените ВАШ_ID на ваш реферальный маркер из https://examka.ai -->
