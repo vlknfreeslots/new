@@ -1,141 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студенческий Помощник Pro</title>
+    <style>
+        :root {
+            --background: #f5f5f7;
+            --surface: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #dddddd;
+            --calc-btn: #e5e5ea;
+            --calc-btn-text: #000000;
+            --primary-color: #6200ee;
+        }
+
+        [data-theme="dark"] {
+            --background: #121212;
+            --surface: #1e1e1e;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --border: #333333;
+            --calc-btn: #333333;
+            --calc-btn-text: #ffffff;
+            --primary-color: #bb86fc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+
+        h1 { margin: 0; color: var(--primary-color); font-size: 22px; }
+        
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 15px;
+            font-weight: 600;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .tab-content {
+            display: none;
+            width: 100%;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-sizing: border-box;
+        }
+
+        h2 { margin-top: 0; color: var(--primary-color); font-size: 18px; margin-bottom: 15px; }
+
+        input, button, textarea {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: var(--surface);
+            color: var(--text);
+            box-sizing: border-box;
+        }
+
+        .schedule-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .schedule-input-group input {
+            width: 100%;
+        }
+
+        .schedule-list { list-style: none; padding: 0; margin: 0; }
+        
+        .schedule-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .delete-btn { background-color: #ff3b30; color: white; padding: 6px 12px; border: none; }
+
+        .calc-screen {
+            width: 100%;
+            height: 60px;
+            background: var(--background);
+            text-align: right;
+            font-size: 24px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .calc-grid button {
+            height: 55px;
+            font-size: 18px;
+            background-color: var(--calc-btn);
+            color: var(--calc-btn-text);
+            border: none;
+        }
+
+        .calc-grid button.operator { background-color: #ff9500; color: white; }
+        .calc-grid button.equal { background-color: var(--primary-color); color: white; }
+
+        .notes-textarea {
+            width: 100%;
+            height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .examka-promo {
+            background: linear-gradient(135deg, #8a2be2, #4a00e0);
+            color: white;
+            text-align: center;
+            border: none;
+        }
+        .examka-promo h2 { color: white; }
+        .examka-promo p { color: #e0d0ff; font-size: 14px; }
+        
+        .examka-btn {
+            display: inline-block;
+            background-color: #03dac6;
+            color: #121212;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🎓 Помощник</h1>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Темная тема</button>
+    </header>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab(event, 'tab-schedule')">📅 Расписание</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-calc')">🧮 Калькулятор</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tab-notes')">📝 Шпаргалки</button>
+    </div>
+
+    <!-- ТАБ 1: РАСПИСАНИЕ -->
+    <div id="tab-schedule" class="tab-content active">
+        <div class="card">
+            <h2>📅 Расписание занятий</h2>
+            <div class="schedule-input-group">
+                <input type="text" id="subject" placeholder="Название предмета">
+                <input type="time" id="time">
+                <input type="text" id="room" placeholder="Аудитория">
+                <button style="background-color: var(--primary-color); color: white;" onclick="addLesson()">Добавить пару</button>
+            </div>
+            <ul class="schedule-list" id="scheduleList"></ul>
+        </div>
+    </div>
+
+    <!-- ТАБ 2: КАЛЬКУЛЯТОР -->
+    <div id="tab-calc" class="tab-content">
+        <div class="card">
+            <h2>🧮 Калькулятор</h2>
+            <input type="text" class="calc-screen" id="calcScreen" readonly>
+            <div class="calc-grid">
+                <button onclick="clearCalc()">C</button>
+                <button onclick="pressCalc('(')">(</button>
+                <button onclick="pressCalc(')')">)</button>
+                <button class="operator" onclick="pressCalc('/')">/</button>
+                
+                <button onclick="pressCalc('7')">7</button>
+                <button onclick="pressCalc('8')">8</button>
+                <button onclick="pressCalc('9')">9</button>
+                <button class="operator" onclick="pressCalc('*')">*</button>
+                
+                <button onclick="pressCalc('4')">4</button>
+                <button onclick="pressCalc('5')">5</button>
+                <button onclick="pressCalc('6')">6</button>
+                <button class="operator" onclick="pressCalc('-')">-</button>
+                
+                <button onclick="pressCalc('1')">1</button>
+                <button onclick="pressCalc('2')">2</button>
+                <button onclick="pressCalc('3')">3</button>
+                <button class="operator" onclick="pressCalc('+')">+</button>
+                
+                <button onclick="pressCalc('0')">0</button>
+                <button onclick="pressCalc('.')">.</button>
+                <button class="equal" onclick="calculateResult()">=</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ТАБ 3: ШПАРГАЛКИ -->
+    <div id="tab-notes" class="tab-content">
+        <div class="card">
+            <h2>📝 Шпаргалки и заметки</h2>
+            <textarea class="notes-textarea" id="notesArea" oninput="saveNotes()" placeholder="Вставьте формулы или текст заметок..."></textarea>
+        </div>
+    </div>
+
+    <!-- РЕФЕРАЛЬНЫЙ БАННЕР -->
+    <div class="card examka-promo">
+        <h2>✨ Сложная задача или реферат?</h2>
+        <p>ИИ [Examka AI](https://examka.ai) напишет курсовую, решит высшую математику или сделает чертеж по ГОСТу за пару минут!</p>
+        <a href="https://examka.ai?ref=ВАШ_ID" target="_blank" class="examka-btn">Решить через Examka ИИ →</a>
+    </div>
+</div>
+
 <script>
-    // --- УПРАВЛЕНИЕ ВКЛАДКАМИ ---
     function switchTab(event, tabId) {
         const contents = document.querySelectorAll('.tab-content');
-        contents.forEach(content => content.classList.remove('active'));
-
+        contents.forEach(c => c.classList.remove('active'));
         const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-
+        buttons.forEach(b => b.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         event.currentTarget.classList.add('active');
     }
 
-    // --- УПРАВЛЕНИЕ ТЕМОЙ ---
     function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        
-        document.getElementById('themeToggle').innerText = newTheme === 'dark' ? '☀️ Светлая тема' : '🌙 Темная тема';
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        document.getElementById('themeToggle').innerText = next === 'dark' ? '☀️ Светлая тема' : '🌙 Темная тема';
     }
 
     function initTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        document.getElementById('themeToggle').innerText = savedTheme === 'dark' ? '☀️ Светлая тема' : '🌙 Темная тема';
-    }
-
-    // --- ЛОГИКА РАСПИСАНИЯ ---
-    function loadSchedule() {
-        const localData = localStorage.getItem('student_schedule');
-        const lessons = localData ? JSON.parse(localData) : [];
-        const list = document.getElementById('scheduleList');
-        list.innerHTML = '';
-        
-        lessons.forEach((lesson, index) => {
-            const li = document.createElement('li');
-            li.className = 'schedule-item';
-            
-            // Безопасное создание структуры
-            li.innerHTML = `
-                <div>
-                    <strong>${lesson.time}</strong> — ${lesson.subject} 
-                    <span style="color: var(--text-light)">[Ауд. ${lesson.room}]</span>
-                </div>
-            `;
-            
-            const delBtn = document.createElement('button');
-            delBtn.className = 'delete-btn';
-            delBtn.innerText = 'Удалить';
-            delBtn.onclick = function() { deleteLesson(index); };
-            
-            li.appendChild(delBtn);
-            list.appendChild(li);
-        });
-    }
-
-    function addLesson() {
-        const subject = document.getElementById('subject').value.trim();
-        const time = document.getElementById('time').value;
-        const room = document.getElementById('room').value.trim();
-
-        if (!subject || !time || !room) {
-            alert('Заполните все поля!');
-            return;
-        }
-
-        const localData = localStorage.getItem('student_schedule');
-        const lessons = localData ? JSON.parse(localData) : [];
-        lessons.push({ subject, time, room });
-        lessons.sort((a, b) => a.time.localeCompare(b.time));
-        
-        localStorage.setItem('student_schedule', JSON.stringify(lessons));
-        loadSchedule();
-
-        document.getElementById('subject').value = '';
-        document.getElementById('time').value = '';
-        document.getElementById('room').value = '';
-    }
-
-    function deleteLesson(index) {
-        const localData = localStorage.getItem('student_schedule');
-        if (!localData) return;
-        let lessons = JSON.parse(localData);
-        lessons.splice(index, 1);
-        localStorage.setItem('student_schedule', JSON.stringify(lessons));
-        loadSchedule();
-    }
-
-    // --- НАДЕЖНАЯ ЛОГИКА КАЛЬКУЛЯТОРА ---
-    const screen = document.getElementById('calcScreen');
-    
-    function pressCalc(val) { 
-        if (screen.value === 'Ошибка') screen.value = '';
-        screen.value += val; 
-    }
-    
-    function clearCalc() { 
-        screen.value = ''; 
-    }
-    
-    function calculateResult() {
-        try {
-            let expression = screen.value;
-            if (!expression) return;
-            
-            // Очищаем строку от любых опасных символов, разрешаем только математику
-            expression = expression.replace(/[^0-9+\-*/().]/g, '');
-            
-            // Безопасное и гарантированное вычисление без использования устаревшего eval
-            const result = new Function(`return (${expression})`)();
-            
-            if (result === undefined || isNaN(result) || !isFinite(result)) {
-                screen.value = 'Ошибка';
-            } else {
-                screen.value = Number(result.toFixed(8)).toString(); // Округляем длинные дроби
-            }
-        } catch (e) { 
-            screen.value = 'Ошибка'; 
-        }
-    }
-
-    // --- ЛОГИКА ЗАМЕТОК ---
-    function saveNotes() {
-        const text = document.getElementById('notesArea').value;
-        localStorage.setItem('student_notes', text);
-    }
-    function loadNotes() {
-        const savedText = localStorage.getItem('student_notes') || '';
-        document.getElementById('notesArea').value = savedText;
-    }
-
-    // Инициализация при загрузке страницы
-    window.onload = function() {
-        initTheme();
-        loadSchedule();
-        loadNotes();
-    }
-</script>
+        const saved = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', saved);
